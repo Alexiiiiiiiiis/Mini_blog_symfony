@@ -1,4 +1,4 @@
-# 🚀 Mini Blog Symfony — Projet Final IPSSI
+#  Projet Blog Symfony 
 
 Un blog complet développé avec **Symfony 7**, **Bootstrap 5** et **Doctrine ORM**, avec gestion des rôles (Admin, Utilisateur, Visiteur).
 
@@ -78,8 +78,7 @@ php bin/console doctrine:fixtures:load
 
 # 7. Lancer le serveur
 symfony serve
-# ou
-php -S localhost:8000 -t public/
+
 ```
 
 ### 🔑 Comptes de test (après fixtures)
@@ -164,16 +163,8 @@ symfony-blog/
 - **Doctrine ORM** — Gestion de la base de données
 - **Twig** — Moteur de templates
 - **Bootstrap 5** — Framework CSS responsive
-- **Bootstrap Icons** — Icônes
 - **Symfony Security** — Authentification & autorisation
 
 ---
 
-## 📝 Critères d'évaluation couverts
 
-- ✅ Fonctionnalité complète des pages du blog
-- ✅ Gestion des rôles et permissions (ROLE_ADMIN, ROLE_USER, visiteur)
-- ✅ Qualité du code — conventions Symfony, Doctrine, controllers propres
-- ✅ Design Bootstrap responsive
-- ✅ Authentification sécurisée (hashage, CSRF)
-- ✅ Relations Doctrine (OneToMany, ManyToOne)
