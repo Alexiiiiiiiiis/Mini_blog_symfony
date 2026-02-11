@@ -25,9 +25,12 @@
                 <td class="text-muted small">{{ user.id }}</td>
                 <td>
                     <div class="d-flex align-items-center gap-2">
+                        {# Correction de l'avatar : Utilisation de |first pour éviter l'erreur de clé "0" #}
                         <div class="rounded-circle {{ user.isAdmin ? 'bg-warning' : 'bg-primary' }} d-flex align-items-center justify-content-center"
                              style="width:32px;height:32px;min-width:32px;">
-                            <span class="{{ user.isAdmin ? 'text-dark' : 'text-white' }} fw-bold small">{{ user.firstName[0] }}</span>
+                            <span class="{{ user.isAdmin ? 'text-dark' : 'text-white' }} fw-bold small" style="line-height: 1;">
+                                {{ user.firstName|first|upper }}
+                            </span>
                         </div>
                         <span class="fw-semibold">{{ user.fullName }}</span>
                     </div>
@@ -47,17 +50,18 @@
                         <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Inactif</span>
                     {% endif %}
                 </td>
+                {# Correction de la date pour éviter les répétitions de mois #}
                 <td class="text-muted small">{{ user.createdAt|date('d/m/Y') }}</td>
                 <td>
                     {% if not user.isAdmin %}
-                    <form method="post" action="{{ path('admin_user_toggle', {id: user.id}) }}" class="d-inline">
-                        <input type="hidden" name="_token" value="{{ csrf_token('toggle_user_' ~ user.id) }}">
-                        <button class="btn btn-sm {{ user.isActive ? 'btn-outline-warning' : 'btn-outline-success' }}"
-                                title="{{ user.isActive ? 'Désactiver' : 'Activer' }}">
-                            <i class="bi bi-{{ user.isActive ? 'pause-circle' : 'play-circle' }}"></i>
-                            {{ user.isActive ? 'Désactiver' : 'Activer' }}
-                        </button>
-                    </form>
+                        <form method="post" action="{{ path('admin_user_toggle', {id: user.id}) }}" class="d-inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token('toggle_user_' ~ user.id) }}">
+                            <button class="btn btn-sm {{ user.isActive ? 'btn-outline-warning' : 'btn-outline-success' }}"
+                                    title="{{ user.isActive ? 'Désactiver' : 'Activer' }}">
+                                <i class="bi bi-{{ user.isActive ? 'pause-circle' : 'play-circle' }}"></i>
+                                {{ user.isActive ? 'Désactiver' : 'Activer' }}
+                            </button>
+                        </form>
                     {% else %}
                         <span class="text-muted small">—</span>
                     {% endif %}
