@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription — MonBlog{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <div class="text-center mb-4">
+                    <i class="bi bi-person-plus-fill text-primary" style="font-size: 2.5rem;"></i>
+                    <h2 class="fw-bold mt-2">Créer un compte</h2>
+                    <p class="text-muted">Rejoignez la communauté MonBlog</p>
+                </div>
+
+                {{ form_start(registrationForm, {attr: {novalidate: 'novalidate'}}) }}
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            {{ form_label(registrationForm.firstName) }}
+                            {{ form_widget(registrationForm.firstName) }}
+                            <div class="text-danger small">{{ form_errors(registrationForm.firstName) }}</div>
+                        </div>
+                        <div class="col-6">
+                            {{ form_label(registrationForm.lastName) }}
+                            {{ form_widget(registrationForm.lastName) }}
+                            <div class="text-danger small">{{ form_errors(registrationForm.lastName) }}</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(registrationForm.email) }}
+                        {{ form_widget(registrationForm.email) }}
+                        <div class="text-danger small">{{ form_errors(registrationForm.email) }}</div>
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(registrationForm.plainPassword.first) }}
+                        {{ form_widget(registrationForm.plainPassword.first) }}
+                        <div class="text-danger small">{{ form_errors(registrationForm.plainPassword.first) }}</div>
+                    </div>
+                    <div class="mb-4">
+                        {{ form_label(registrationForm.plainPassword.second) }}
+                        {{ form_widget(registrationForm.plainPassword.second) }}
+                        <div class="text-danger small">{{ form_errors(registrationForm.plainPassword) }}</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                        <i class="bi bi-person-check"></i> Créer mon compte
+                    </button>
+                {{ form_end(registrationForm) }}
+
+                <hr class="my-4">
+                <div class="text-center">
+                    <p class="text-muted mb-0">Déjà inscrit ?
+                        <a href="{{ path('app_login') }}" class="text-primary fw-semibold">Se connecter</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

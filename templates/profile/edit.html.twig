@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil — MonBlog{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h3 class="fw-bold mb-4"><i class="bi bi-pencil-square"></i> Modifier mon profil</h3>
+                {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            {{ form_label(field) }}
+                            {{ form_widget(field) }}
+                            <div class="text-danger small">{{ form_errors(field) }}</div>
+                        </div>
+                    {% endfor %}
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Sauvegarder
+                        </button>
+                        <a href="{{ path('app_profile') }}" class="btn btn-outline-secondary">Annuler</a>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

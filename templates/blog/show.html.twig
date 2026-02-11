@@ -1,0 +1,141 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ post.title }} — MonBlog{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Article principal -->
+        <div class="col-lg-8">
+            <article class="card">
+                {% if post.picture %}
+                    <img src="{{ post.picture }}" class="card-img-top" alt="{{ post.title }}">
+                {% endif %}
+
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        {% if post.category %}
+                            <span class="badge badge-category">{{ post.category.name }}</span>
+                        {% endif %}
+                        <small class="text-muted">
+                            <i class="bi bi-calendar3"></i> {{ post.publishedAt|date('d/m/Y') }}
+                        </small>
+                    </div>
+
+                    <h1 class="card-title display-5 fw-bold mb-3">{{ post.title }}</h1>
+
+                    <div class="d-flex align-items-center mb-4">
+                        {% if post.author.profilePicture %}
+                            <img src="{{ post.author.profilePicture }}" class="rounded-circle me-3" width="40" height="40" style="object-fit:cover">
+                        {% else %}
+                            <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-3" style="width:40px;height:40px;">
+                                <span class="text-white fw-bold">{{ post.author.firstName|first|upper }}</span>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <strong>{{ post.author.fullName }}</strong>
+                            <br>
+                            <small class="text-muted">Auteur</small>
+                        </div>
+                    </div>
+
+                    <div class="post-content mb-4">
+                        {{ post.content|nl2br }}
+                    </div>
+                </div>
+            </article>
+
+            <!-- Section commentaires -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-chat"></i> Commentaires ({{ post.approvedComments|length }})</h5>
+                </div>
+                <div class="card-body">
+                    {% if post.approvedComments is empty %}
+                        <p class="text-muted text-center py-3">Aucun commentaire pour le moment.</p>
+                    {% else %}
+                        {% for comment in post.approvedComments %}
+                            <div class="comment mb-3 pb-3 border-bottom">
+                                <div class="d-flex">
+                                    {% if comment.author.profilePicture %}
+                                        <img src="{{ comment.author.profilePicture }}" class="rounded-circle me-3" width="35" height="35" style="object-fit:cover">
+                                    {% else %}
+                                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" style="width:35px;height:35px;">
+                                            <span class="text-white fw-bold small">{{ comment.author.firstName|first|upper }}</span>
+                                        </div>
+                                    {% endif %}
+                                    <div class="flex-grow-1">
+                                        <strong>{{ comment.author.fullName }}</strong>
+                                        <small class="text-muted ms-2">{{ comment.createdAt|date('d/m/Y H:i') }}</small>
+                                        <p class="mt-1 mb-0">{{ comment.content }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if app.user %}
+                        <div class="mt-4">
+                            <h6>Ajouter un commentaire</h6>
+                            {{ form_start(commentForm) }}
+                                <div class="mb-3">
+                                    {{ form_label(commentForm.content, 'Votre commentaire') }}
+                                    {{ form_widget(commentForm.content, {'attr': {'class': 'form-control', 'rows': 3}}) }}
+                                    {{ form_errors(commentForm.content) }}
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-send"></i> Publier
+                                </button>
+                            {{ form_end(commentForm) }}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-3 bg-light rounded">
+                            <i class="bi bi-lock"></i> <a href="{{ path('app_login') }}">Connectez-vous</a> pour commenter cet article.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="sidebar-card">
+                <h6 class="fw-bold mb-3"><i class="bi bi-grid"></i> Catégories</h6>
+                <a href="{{ path('app_home') }}" class="btn btn-sm {{ not currentCategory ? 'btn-primary' : 'btn-outline-secondary' }} me-1 mb-2">
+                    Toutes
+                </a>
+                {% for cat in categories %}
+                    <a href="{{ path('app_home', {category: cat.id}) }}"
+                       class="btn btn-sm {{ currentCategory == cat.id ? 'btn-primary' : 'btn-outline-secondary' }} me-1 mb-2">
+                        {{ cat.name }}
+                        <span class="badge bg-secondary ms-1">{{ cat.posts|length }}</span>
+                    </a>
+                {% endfor %}
+            </div>
+
+            {% if not app.user %}
+            <div class="sidebar-card text-center" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white;">
+                <i class="bi bi-person-plus" style="font-size: 2.5rem;"></i>
+                <h6 class="mt-2 fw-bold">Rejoignez la communauté</h6>
+                <p class="small mb-3">Inscrivez-vous pour commenter les articles.</p>
+                <a href="{{ path('app_register') }}" class="btn btn-light btn-sm fw-bold">S'inscrire gratuitement</a>
+            </div>
+            {% else %}
+            <div class="sidebar-card text-center">
+                {% if app.user and app.user.profilePicture %}
+                    <img src="{{ app.user.profilePicture }}" class="rounded-circle mb-2" width="60" height="60" style="object-fit:cover">
+                {% elseif app.user %}
+                    <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-2" style="width:60px;height:60px;">
+                        <span class="text-white fw-bold fs-4">{{ app.user.firstName|first|upper }}</span>
+                    </div>
+                {% endif %}
+                {% if app.user %}
+                    <h6 class="fw-bold">{{ app.user.fullName }}</h6>
+                    <p class="small text-muted">{{ app.user.createdAt|date('d/m/Y') }}</p>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Articles — Admin{% endblock %}
+{% block page_title %}Gestion des articles{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="mb-0 fw-bold">{{ posts|length }} article(s)</h5>
+    <a href="{{ path('admin_post_new') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Nouvel article
+    </a>
+</div>
+
+<div class="card">
+    <table class="table table-hover align-middle mb-0">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Catégorie</th>
+                <th>Commentaires</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for post in posts %}
+            <tr>
+                <td class="text-muted small">{{ post.id }}</td>
+                <td>
+                    <span class="fw-semibold">{{ post.title|slice(0, 40) }}{% if post.title|length > 40 %}...{% endif %}</span>
+                </td>
+                <td class="small">{{ post.author.fullName }}</td>
+                <td>
+                    {% if post.category %}
+                        <span class="badge bg-primary">{{ post.category.name }}</span>
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <span class="badge bg-light text-dark">{{ post.comments|length }}</span>
+                </td>
+                <td class="text-muted small">{{ post.publishedAt|date('d/m/Y') }}</td>
+                <td>
+                    <a href="{{ path('app_post_show', {id: post.id}) }}" class="btn btn-sm btn-outline-secondary" title="Voir" target="_blank">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="{{ path('admin_post_edit', {id: post.id}) }}" class="btn btn-sm btn-outline-primary" title="Modifier">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form method="post" action="{{ path('admin_post_delete', {id: post.id}) }}" class="d-inline"
+                          onsubmit="return confirm('Supprimer cet article ?')">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete_post_' ~ post.id) }}">
+                        <button class="btn btn-sm btn-outline-danger" title="Supprimer">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="7" class="text-center text-muted py-4">Aucun article</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

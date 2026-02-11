@@ -1,0 +1,104 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Tableau de bord — Admin{% endblock %}
+{% block page_title %}Tableau de bord{% endblock %}
+
+{% block content %}
+<!-- Stats -->
+<div class="row g-4 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+            <i class="bi bi-file-earmark-text fs-2 opacity-75"></i>
+            <h2 class="fw-bold mt-2 mb-0">{{ totalPosts }}</h2>
+            <p class="mb-0 opacity-75">Articles</p>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card" style="background: linear-gradient(135deg, #06b6d4, #0ea5e9);">
+            <i class="bi bi-people fs-2 opacity-75"></i>
+            <h2 class="fw-bold mt-2 mb-0">{{ totalUsers }}</h2>
+            <p class="mb-0 opacity-75">Utilisateurs</p>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <i class="bi bi-chat-dots fs-2 opacity-75"></i>
+            <h2 class="fw-bold mt-2 mb-0">{{ totalComments }}</h2>
+            <p class="mb-0 opacity-75">Commentaires</p>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+            <i class="bi bi-calendar3 fs-2 opacity-75"></i>
+            <h2 class="fw-bold mt-2 mb-0">{{ "now"|date("Y") }}</h2>
+            <p class="mb-0 opacity-75">Année en cours</p>
+        </div>
+    </div>
+</div>
+
+<!-- Quick actions + Recent posts -->
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0"><i class="bi bi-clock-history"></i> Articles récents</h5>
+                <a href="{{ path('admin_posts') }}" class="btn btn-sm btn-outline-primary">Voir tous</a>
+            </div>
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Catégorie</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for post in recentPosts %}
+                    <tr>
+                        <td class="fw-semibold">{{ post.title|slice(0, 35) }}{% if post.title|length > 35 %}...{% endif %}</td>
+                        <td>
+                            {% if post.category %}
+                                <span class="badge bg-primary">{{ post.category.name }}</span>
+                            {% else %}
+                                <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted small">{{ post.publishedAt|date('d/m/Y') }}</td>
+                        <td>
+                            <a href="{{ path('app_post_show', {id: post.id}) }}" class="btn btn-xs btn-outline-secondary btn-sm" target="_blank">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ path('admin_post_edit', {id: post.id}) }}" class="btn btn-xs btn-outline-primary btn-sm">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="4" class="text-center text-muted">Aucun article</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card p-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-lightning"></i> Actions rapides</h5>
+            <div class="d-grid gap-2">
+                <a href="{{ path('admin_post_new') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Nouvel article
+                </a>
+                <a href="{{ path('admin_category_new') }}" class="btn btn-outline-primary">
+                    <i class="bi bi-plus-circle"></i> Nouvelle catégorie
+                </a>
+                <a href="{{ path('admin_users') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-people"></i> Gérer les utilisateurs
+                </a>
+                <a href="{{ path('admin_comments') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-chat-dots"></i> Modérer les commentaires
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
