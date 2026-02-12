@@ -21,27 +21,7 @@ class BlogController extends AbstractController
         private EntityManagerInterface $em
     ) {}
 
-    #[Route('/', name: 'app_home')]
-    public function index(Request $request): Response
-    {
-        $search = $request->query->get('q');
-        $categoryId = $request->query->get('category');
 
-        if ($search) {
-            $posts = $this->postRepository->search($search);
-        } elseif ($categoryId) {
-            $posts = $this->postRepository->findByCategory((int)$categoryId);
-        } else {
-            $posts = $this->postRepository->findAllOrderedByDate();
-        }
-
-        return $this->render('blog/index.html.twig', [
-            'posts' => $posts,
-            'categories' => $this->categoryRepository->findAll(),
-            'currentCategory' => $categoryId,
-            'search' => $search,
-        ]);
-    }
 
     #[Route('/post/{id}', name: 'app_post_show', requirements: ['id' => '\d+'])]
     public function show(int $id, Request $request): Response

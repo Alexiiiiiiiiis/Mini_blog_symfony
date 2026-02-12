@@ -49,11 +49,46 @@
                             <i class="bi bi-{{ comment.status == 'approved' ? 'x' : 'check' }}"></i>
                         </button>
                     </form>
-                    <form method="post" action="{{ path('admin_comment_delete', {id: comment.id}) }}" class="d-inline"
-                          onsubmit="return confirm('Supprimer ce commentaire ?')">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete_comment_' ~ comment.id) }}">
-                        <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                    </form>
+                    
+                    {# Bouton qui ouvre la modal au lieu du confirm JavaScript #}
+                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ comment.id }}">
+                        <i class="bi bi-trash"></i>
+                    </button>
+
+                    {# Modal de confirmation pour chaque commentaire #}
+                    <div class="modal fade" id="deleteModal{{ comment.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ comment.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header border-0">
+                                    <h5 class="modal-title fw-bold" id="deleteModalLabel{{ comment.id }}">
+                                        <i class="bi bi-exclamation-triangle-fill text-danger"></i> Confirmer la suppression
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="mb-2">Êtes-vous sûr de vouloir supprimer ce commentaire ?</p>
+                                    <div class="alert alert-light border">
+                                        <small class="text-muted d-block mb-1"><strong>Auteur :</strong> {{ comment.author.fullName }}</small>
+                                        <small class="text-muted"><strong>Contenu :</strong> {{ comment.content|slice(0, 100) }}...</small>
+                                    </div>
+                                    <p class="text-danger small mb-0">
+                                        <i class="bi bi-info-circle"></i> Cette action est <strong>irréversible</strong>.
+                                    </p>
+                                </div>
+                                <div class="modal-footer border-0">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        <i class="bi bi-x-circle"></i> Annuler
+                                    </button>
+                                    <form method="post" action="{{ path('admin_comment_delete', {id: comment.id}) }}" class="d-inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete_comment_' ~ comment.id) }}">
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="bi bi-trash-fill"></i> Supprimer définitivement
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
         {% else %}
