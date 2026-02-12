@@ -72,20 +72,30 @@ php bin/console doctrine:database:create
 # 5. Exécuter les migrations
 php bin/console doctrine:migrations:migrate
 
-# 6. Charger les données de test (optionnel)
-composer require --dev doctrine/doctrine-fixtures-bundle
+# 6. Charger les données de test
 php bin/console doctrine:fixtures:load
 
 # 7. Lancer le serveur
 symfony serve
-
 ```
 
 ### 🔑 Comptes de test (après fixtures)
-| Email | Mot de passe | Rôle |
-|---|---|---|
-| admin@blog.com | admin123 | ROLE_ADMIN |
-| user@blog.com | user123 | ROLE_USER |
+| Email | Mot de passe | Rôle | Nom |
+|---|---|---|---|
+| admin@blog.com | admin123 | ROLE_ADMIN | Admin Blog |
+| alexis.rodrigues95140@gmail.com | admin123 | ROLE_ADMIN | Alexis Rodrigues |
+| user@blog.com | user123 | ROLE_USER | Jean Dupont |
+| prof@blog.com | user321 | ROLE_USER | Hugo Lemoine |
+
+---
+
+## 📊 Données de test
+
+Les fixtures créent automatiquement :
+- **4 utilisateurs** (2 admins + 2 utilisateurs standards)
+- **6 catégories** (Technologie, Symfony, PHP, Design, Actualités, Gaming)
+- **8 articles** avec images et contenu complet
+- **20 commentaires** répartis sur les articles
 
 ---
 
@@ -96,9 +106,10 @@ symfony-blog/
 ├── src/
 │   ├── Controller/
 │   │   ├── AdminController.php      # Gestion admin complète
+│   │   ├── HomeController.php       # Page d'accueil avec recherche
 │   │   ├── BlogController.php       # Pages publiques blog
 │   │   ├── SecurityController.php   # Login / Register
-│   │   └── ProfileController.php   # Profil utilisateur
+│   │   └── ProfileController.php    # Profil utilisateur
 │   ├── Entity/
 │   │   ├── User.php
 │   │   ├── Post.php
@@ -113,9 +124,15 @@ symfony-blog/
 │   ├── Security/
 │   │   └── LoginFormAuthenticator.php
 │   └── DataFixtures/
-│       └── AppFixtures.php
+│       ├── AdminFixtures.php       # Comptes administrateurs
+│       ├── UserFixtures.php        # Utilisateurs standards
+│       ├── CategoryFixtures.php    # 6 catégories
+│       ├── PostFixtures.php        # 8 articles
+│       └── CommentFixtures.php     # 20 commentaires
 ├── templates/
 │   ├── base.html.twig
+│   ├── home/
+│   │   └── index.html.twig         # Page d'accueil + recherche + pagination
 │   ├── blog/
 │   │   ├── index.html.twig         # Liste des articles + sidebar
 │   │   └── show.html.twig          # Détail article + commentaires
@@ -130,13 +147,17 @@ symfony-blog/
 │   │   └── login.html.twig
 │   ├── registration/
 │   │   └── register.html.twig
-│   └── profile/
-│       ├── show.html.twig
-│       └── edit.html.twig
+│   ├── profile/
+│   │   ├── show.html.twig
+│   │   └── edit.html.twig
+│   └── components/
+│       └── pagination.html.twig    # Composant pagination réutilisable
 └── config/
     └── packages/
         ├── security.yaml
-        └── doctrine.yaml
+        ├── doctrine.yaml
+        ├── knp_paginator.yaml      # Configuration pagination
+        └── translation.yaml        # Locale FR
 ```
 
 ---
@@ -146,6 +167,7 @@ symfony-blog/
 | Route | URL | Accès |
 |---|---|---|
 | app_home | / | Public |
+| app_blog | /blog | Public |
 | app_post_show | /post/{id} | Public |
 | app_login | /login | Public |
 | app_register | /register | Public |
@@ -164,7 +186,30 @@ symfony-blog/
 - **Twig** — Moteur de templates
 - **Bootstrap 5** — Framework CSS responsive
 - **Symfony Security** — Authentification & autorisation
+- **KnpPaginatorBundle** — Pagination des résultats
 
 ---
 
+## 🚀 Fonctionnalités avancées
 
+### 🔍 Recherche
+- Recherche par titre et contenu des articles
+- Recherche par catégorie
+- Pagination intégrée aux résultats
+
+### 📄 Pagination
+- 6 articles par page sur la page d'accueil
+- 5 articles par page dans la section blog
+- Pagination personnalisée avec Bootstrap 5
+
+### 🎨 Interface responsive
+- Design moderne et épuré
+- Sidebar avec catégories et articles récents
+- Cards Bootstrap pour l'affichage des articles
+- Interface d'administration complète
+
+### 🔐 Sécurité
+- Hashage des mots de passe avec Bcrypt
+- Protection CSRF sur tous les formulaires
+- Système de rôles (ROLE_USER, ROLE_ADMIN)
+- Modération des commentaires
