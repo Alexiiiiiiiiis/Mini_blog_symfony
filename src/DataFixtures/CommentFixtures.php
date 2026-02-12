@@ -141,7 +141,7 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
                     ->setPost($this->getReference($data['post'], Post::class))
                     ->setAuthor($this->getReference($data['author'], User::class))
                     ->setCreatedAt(new \DateTimeImmutable($data['date']))
-                    ->setStatus('valide');
+                    ->setStatus('approved');
 
             $manager->persist($comment);
         }
