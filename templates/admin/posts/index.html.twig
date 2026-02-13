@@ -50,13 +50,52 @@
                     <a href="{{ path('admin_post_edit', {id: post.id}) }}" class="btn btn-sm btn-outline-primary" title="Modifier">
                         <i class="bi bi-pencil"></i>
                     </a>
-                    <form method="post" action="{{ path('admin_post_delete', {id: post.id}) }}" class="d-inline"
-                          onsubmit="return confirm('Supprimer cet article ?')">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete_post_' ~ post.id) }}">
-                        <button class="btn btn-sm btn-outline-danger" title="Supprimer">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </form>
+                    
+                    {# Bouton qui ouvre la modal au lieu du confirm JavaScript #}
+                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ post.id }}" title="Supprimer">
+                        <i class="bi bi-trash"></i>
+                    </button>
+
+                    {# Modal de confirmation pour chaque article #}
+                    <div class="modal fade" id="deleteModal{{ post.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ post.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header border-0">
+                                    <h5 class="modal-title fw-bold" id="deleteModalLabel{{ post.id }}">
+                                        <i class="bi bi-exclamation-triangle-fill text-danger"></i> Confirmer la suppression
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="mb-2">Êtes-vous sûr de vouloir supprimer cet article ?</p>
+                                    <div class="alert alert-light border">
+                                        <small class="text-muted d-block mb-1"><strong>Titre :</strong> {{ post.title }}</small>
+                                        <small class="text-muted d-block mb-1"><strong>Auteur :</strong> {{ post.author.fullName }}</small>
+                                        <small class="text-muted"><strong>Date :</strong> {{ post.publishedAt|date('d/m/Y') }}</small>
+                                    </div>
+                                    {% if post.comments|length > 0 %}
+                                        <div class="alert alert-warning">
+                                            <i class="bi bi-exclamation-triangle"></i> Cet article contient <strong>{{ post.comments|length }} commentaire(s)</strong> qui seront également supprimés.
+                                        </div>
+                                    {% endif %}
+                                    <p class="text-danger small mb-0">
+                                        <i class="bi bi-info-circle"></i> Cette action est <strong>irréversible</strong>.
+                                    </p>
+                                </div>
+                                <div class="modal-footer border-0">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        <i class="bi bi-x-circle"></i> Annuler
+                                    </button>
+                                    <form method="post" action="{{ path('admin_post_delete', {id: post.id}) }}" class="d-inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete_post_' ~ post.id) }}">
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="bi bi-trash-fill"></i> Supprimer définitivement
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
         {% else %}
