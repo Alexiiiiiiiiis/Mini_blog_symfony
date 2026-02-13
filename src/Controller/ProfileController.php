@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -17,6 +18,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class ProfileController extends AbstractController
 {
+    public function __construct(
+        private PostRepository $postRepository
+    ) {}
+
     #[Route('', name: 'app_profile')]
     public function show(): Response
     {
@@ -52,6 +57,19 @@ class ProfileController extends AbstractController
 
         return $this->render('profile/edit.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/liked-posts', name: 'app_profile_liked_posts')]
+    public function likedPosts(): Response
+    {
+        $user = $this->getUser();
+        
+        // Récupérer tous les posts likés par l'utilisateur
+        $likedPosts = $this->postRepository->findLikedPostsByUser($user);
+        
+        return $this->render('profile/liked_posts.html.twig', [
+            'likedPosts' => $likedPosts,
         ]);
     }
 }

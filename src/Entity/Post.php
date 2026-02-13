@@ -42,9 +42,13 @@ class Post
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $comments;
 
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Like::class, orphanRemoval: true)]
+    private Collection $likes;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->likes = new ArrayCollection();
         $this->publishedAt = new \DateTimeImmutable();
     }
 
@@ -94,10 +98,43 @@ class Post
         return $this;
     }
 
+    /**
+     * @return Collection<int, Like>
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(Like $like): static
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes->add($like);
+            $like->setPost($this);
+        }
+        return $this;
+    }
+
+    public function removeLike(Like $like): static
+    {
+        if ($this->likes->removeElement($like)) {
+            if ($like->getPost() === $this) {
+                $like->setPost(null);
+            }
+        }
+        return $this;
+    }
+
     public function getExcerpt(int $length = 200): string
     {
         $text = strip_tags($this->content ?? '');
         if (strlen($text) <= $length) return $text;
         return substr($text, 0, $length) . '...';
     }
+ 
+    public function getLikesCount(): int
+    {
+        return $this->likes->count();
+    }
 }
+

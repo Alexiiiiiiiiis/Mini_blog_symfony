@@ -1,0 +1,76 @@
+/* public/css/likes.css */
+
+.like-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.like-btn:hover {
+    background: rgba(220, 38, 38, 0.1);
+}
+
+.like-btn i {
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.like-btn.liked {
+    background: rgba(220, 38, 38, 0.1);
+}
+
+.like-btn .like-count {
+    font-weight: 600;
+    color: #6c757d;
+}
+
+.like-btn.liked .like-count {
+    color: #dc2626;
+}
+
+/* Animation de pulse au clic */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.like-btn.pulse {
+    animation: pulse 0.3s ease;
+}
+
+/* Style pour la liste des articles likés */
+.liked-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+}
+
+/* Version compacte pour les cartes */
+.like-btn-compact {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+.like-btn-compact i {
+    font-size: 1rem;
+}
+
+/* Effet hover spécial */
+.like-btn:not(.liked):hover i {
+    color: #dc2626;
+    transform: scale(1.1);
+}

@@ -1,0 +1,70 @@
+{# templates/profile/liked_posts.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes articles aimés — MonBlog{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="bi bi-heart-fill text-danger"></i> Mes articles aimés</h1>
+                <a href="{{ path('app_profile') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Retour au profil
+                </a>
+            </div>
+
+            {% if likedPosts is empty %}
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-info-circle"></i>
+                    Vous n'avez encore aimé aucun article.
+                    <br>
+                    <a href="{{ path('app_home') }}" class="btn btn-primary mt-3">
+                        Découvrir les articles
+                    </a>
+                </div>
+            {% else %}
+                <div class="row">
+                    {% for post in likedPosts %}
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                {% if post.picture %}
+                                    <img src="{{ post.picture }}" class="card-img-top" alt="{{ post.title }}" style="height: 200px; object-fit: cover;">
+                                {% endif %}
+                                
+                                <div class="card-body d-flex flex-column">
+                                    {% if post.category %}
+                                        <span class="badge bg-primary mb-2 align-self-start">{{ post.category.name }}</span>
+                                    {% endif %}
+                                    
+                                    <h5 class="card-title">{{ post.title }}</h5>
+                                    <p class="card-text text-muted small flex-grow-1">
+                                        {{ post.excerpt(150) }}
+                                    </p>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar3"></i> {{ post.publishedAt|date('d/m/Y') }}
+                                        </small>
+                                        <a href="{{ path('app_post_show', {id: post.id}) }}" class="btn btn-sm btn-outline-primary">
+                                            Lire <i class="bi bi-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="text-center mt-4">
+                    <p class="text-muted">
+                        <i class="bi bi-heart-fill text-danger"></i> 
+                        Vous avez aimé <strong>{{ likedPosts|length }}</strong> article(s)
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
