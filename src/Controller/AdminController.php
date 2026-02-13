@@ -168,7 +168,7 @@ class AdminController extends AbstractController
         if ($this->isCsrfTokenValid('delete_comment_' . $id, $request->request->get('_token'))) {
             $this->em->remove($comment);
             $this->em->flush();
-            $this->addFlash('warning', 'Attention : Commentaire supprimé avec précaution.');
+            $this->addFlash('warning', 'Attention : Commentaire supprimé avec succès');
         }
         return $this->redirectToRoute('admin_comments');
     }
