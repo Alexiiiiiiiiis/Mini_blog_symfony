@@ -29,7 +29,7 @@ class AdminController extends AbstractController
         private CategoryRepository $categoryRepository
     ) {}
 
-    // ─── DASHBOARD ───────────────────────────────────────────────────────────
+    //  DASHBOARD 
 
     #[Route('', name: 'admin_dashboard')]
     public function dashboard(): Response
@@ -42,7 +42,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    // ─── POSTS ───────────────────────────────────────────────────────────────
+    //  POSTS 
 
     #[Route('/posts', name: 'admin_posts')]
     public function posts(): Response
@@ -109,7 +109,7 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_posts');
     }
 
-    // ─── USERS ───────────────────────────────────────────────────────────────
+    //  USERS 
 
     #[Route('/users', name: 'admin_users')]
     public function users(): Response
@@ -134,7 +134,7 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_users');
     }
 
-    // ─── COMMENTS ────────────────────────────────────────────────────────────
+    //  COMMENTS 
 
     #[Route('/comments', name: 'admin_comments')]
     public function comments(): Response
@@ -173,7 +173,7 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_comments');
     }
 
-    // ─── CATEGORIES ──────────────────────────────────────────────────────────
+    //  CATEGORIES 
 
     #[Route('/categories', name: 'admin_categories')]
     public function categories(): Response
@@ -230,10 +230,12 @@ class AdminController extends AbstractController
         $category = $this->categoryRepository->find($id);
         if (!$category) throw $this->createNotFoundException();
 
-        if ($this->isCsrfTokenValid('delete_cat_' . $id, $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete_category_' . $id, $request->request->get('_token'))) {
             $this->em->remove($category);
             $this->em->flush();
             $this->addFlash('success', 'Catégorie supprimée.');
+        } else {
+            $this->addFlash('error', 'Token CSRF invalide.');
         }
         return $this->redirectToRoute('admin_categories');
     }
