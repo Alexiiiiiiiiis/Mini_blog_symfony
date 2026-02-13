@@ -52,7 +52,7 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword($hasher->hashPassword($user, $form->get('plainPassword')->getData()));
-            $user->setIsActive(true); // Auto-activate; set to false if admin validation required
+            $user->setIsActive(true); 
 
             $em->persist($user);
             $em->flush();

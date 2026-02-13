@@ -43,7 +43,7 @@ class BlogController extends AbstractController
             $this->em->persist($comment);
             $this->em->flush();
 
-            $this->addFlash('success', 'Commentaire ajouté avec succès !');
+            $this->addFlash('success', 'En attente de validation de votre commentaire !');
             return $this->redirectToRoute('app_post_show', ['id' => $id]);
         }
 
