@@ -231,12 +231,36 @@ class AdminController extends AbstractController
         if (!$category) throw $this->createNotFoundException();
 
         if ($this->isCsrfTokenValid('delete_category_' . $id, $request->request->get('_token'))) {
+            
+            // Vérifier si la catégorie a des articles
+            $postsCount = $category->getPosts()->count();
+            
+            if ($postsCount > 0) {
+                // Option 1 : Empêcher la suppression
+                $this->addFlash('error', "Impossible de supprimer cette catégorie car elle contient {$postsCount} article(s). Veuillez d'abord déplacer ou supprimer ces articles.");
+                return $this->redirectToRoute('admin_categories');
+                
+                // Option 2 : Réassigner les articles à NULL (décommentez pour utiliser)
+                /*
+                foreach ($category->getPosts() as $post) {
+                    $post->setCategory(null);
+                }
+                $this->em->remove($category);
+                $this->em->flush();
+                $this->addFlash('success', "Catégorie supprimée. {$postsCount} article(s) n'ont plus de catégorie.");
+                return $this->redirectToRoute('admin_categories');
+                */
+            }
+            
+            // Si la catégorie n'a pas d'articles, on peut la supprimer
             $this->em->remove($category);
             $this->em->flush();
             $this->addFlash('success', 'Catégorie supprimée.');
+            
         } else {
             $this->addFlash('error', 'Token CSRF invalide.');
         }
+        
         return $this->redirectToRoute('admin_categories');
     }
 }
