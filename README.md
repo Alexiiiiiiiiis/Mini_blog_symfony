@@ -80,7 +80,7 @@ php bin/console doctrine:fixtures:load
 symfony serve
 ```
 
-Le site sera accessible sur **http://127.0.0.1:8000**
+Le Blog sera accessible sur **http://127.0.0.1:8000**
 
 ---
 
