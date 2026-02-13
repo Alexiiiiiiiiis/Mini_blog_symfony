@@ -42,7 +42,7 @@
                 <td class="text-center">
                     <span class="badge bg-light text-dark">{{ post.comments|length }}</span>
                 </td>
-                <td class="text-muted small">{{ post.publishedAt|date('d/m/Y') }}</td>
+                <td class="text-muted small">{{ post.publishedAt ? post.publishedAt|format_datetime(locale='fr', pattern='dd/MM/yyyy HH:mm') : '—' }}</td>
                 <td>
                     <a href="{{ path('app_post_show', {id: post.id}) }}" class="btn btn-sm btn-outline-secondary" title="Voir" target="_blank">
                         <i class="bi bi-eye"></i>
@@ -71,7 +71,7 @@
                                     <div class="alert alert-light border">
                                         <small class="text-muted d-block mb-1"><strong>Titre :</strong> {{ post.title }}</small>
                                         <small class="text-muted d-block mb-1"><strong>Auteur :</strong> {{ post.author.fullName }}</small>
-                                        <small class="text-muted"><strong>Date :</strong> {{ post.publishedAt|date('d/m/Y') }}</small>
+                                        <small class="text-muted"><strong>Date :</strong> {{ post.publishedAt ? post.publishedAt|format_datetime(locale='fr', pattern='dd/MM/yyyy HH:mm') : '—' }}</small>
                                     </div>
                                     {% if post.comments|length > 0 %}
                                         <div class="alert alert-warning">
